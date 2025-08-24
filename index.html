@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mario Jump</title>
+<style>
+    * {  
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .game-board {
+        width: 80%;
+        height: 500px;
+        border: 1px solid #333;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+        background: skyblue;
+        border-bottom: 15px solid green;
+    }
+
+    .pipe {
+        position: absolute;
+        bottom: 0;
+        width: 80px;
+        animation: pipe-animation 2s infinite linear;
+    }
+
+    .mario {
+        width: 150px;
+        position: absolute;
+        bottom: 0;
+    }
+
+    .jump {
+        animation: jump 500ms ease-out;
+    }
+
+    @keyframes pipe-animation {
+        from { right: -80px; }
+        to { right: 100%; }
+    }
+
+    @keyframes jump {
+        0%   { bottom: 0; }
+        40%  { bottom: 180px; }
+        50%  { bottom: 180px; }
+        60%  { bottom: 180px; }
+        100% { bottom: 0; }
+    }
+</style>
+</head>
+<body>
+    <div class="game-board">
+        <img src="mario.gif" class="mario">
+        <img src="pipe.png" class="pipe">
+    </div>
+
+<script>
+    const mario = document.querySelector('.mario');
+    const pipe = document.querySelector('.pipe');
+
+    const jump = () => {
+        if (!mario.classList.contains('jump')) {
+            mario.classList.add('jump');
+            setTimeout(() => {
+                mario.classList.remove('jump');
+            }, 500);
+        }
+    };
+
+    document.addEventListener('keydown', jump);
+
+    const loop = setInterval(() => {
+        const pipePosition = pipe.offsetLeft;
+        const marioPosition = +window.getComputedStyle(mario).bottom.replace('px', '');
+
+        if (pipePosition <= 120 && pipePosition > 0 && marioPosition < 80) {
+            pipe.style.animation = 'none';
+            pipe.style.left = `${pipePosition}px`;
+
+            mario.style.animation = 'none';
+            mario.style.bottom = `${marioPosition}px`;
+
+            mario.src = 'mario-game-over.png'; // imagem de game over
+            mario.style.width = '80px';
+            mario.style.marginLeft = '50px';
+
+            clearInterval(loop);
+            alert('💀 Game Over!');
+        }
+    }, 10);
+</script>
+</body>
+</html>
